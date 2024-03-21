@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 export default function CreateMeetingPage() {
+  const [descriptionInput, setDiscriptionInput] = useState("");
   const client = useStreamVideoClient();
   const { user } = useUser();
 
@@ -19,7 +20,10 @@ export default function CreateMeetingPage() {
       </h1>
       <div className="mx-auto w-80 space-y-6 rounded-md bg-slate-100 p-5">
         <h2 className="text-xl font-bold">Start a new meeting!</h2>
-        <DescriptionInput value="placeholder" onChange={() => {}} />
+        <DescriptionInput
+          value={descriptionInput}
+          onChange={setDiscriptionInput}
+        />
       </div>
     </div>
   );
@@ -46,6 +50,26 @@ function DescriptionInput({ value, onChange }: DescriptionInputProps) {
         />
         Add description
       </label>
+      {active && (
+        <label className="block space-y-1">
+          <span className="font-medium">Description</span>
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            maxLength={500}
+            className="w-full rounded-md border border-gray-300 p-2"
+          />
+        </label>
+      )}
     </div>
   );
+}
+
+interface StartTimeInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function StartTimeInput({ value, onChange }: StartTimeInputProps) {
+  const [active, setActive] = useState(false);
 }
