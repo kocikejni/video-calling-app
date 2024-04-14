@@ -8,12 +8,14 @@ import { useState } from "react";
 export default function CreateMeetingPage() {
   const [descriptionInput, setDiscriptionInput] = useState("");
   const [startTimeInput, setStartTimeInput] = useState("");
+  const [participantsInput, setParticipantsInput] = useState("");
   const client = useStreamVideoClient();
   const { user } = useUser();
 
   if (!client || !user) {
     return <Loader2 className="mx-auto animate-spin" />;
   }
+
   return (
     <div className="flex flex-col items-center space-y-6">
       <h1 className="text-center text-2xl font-bold">
@@ -26,6 +28,13 @@ export default function CreateMeetingPage() {
           onChange={setDiscriptionInput}
         />
         <StartTimeInput value={startTimeInput} onChange={setStartTimeInput} />
+        <ParticipantsInput
+          value={participantsInput}
+          onChange={setParticipantsInput}
+        />
+        <button className="w-full rounded-md border bg-orange-300 text-white">
+          Start meeting
+        </button>
       </div>
     </div>
   );
@@ -117,6 +126,53 @@ function StartTimeInput({ value, onChange }: StartTimeInputProps) {
               className="w-full rounded-md border border-gray-300 p-2"
             />
           </span>
+        </label>
+      )}
+    </div>
+  );
+}
+
+interface ParticipantsInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function ParticipantsInput({ value, onChange }: ParticipantsInputProps) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div className="space-y-2">
+      <div className="font-medium">Participants</div>
+      <label className="flex items-center gap-1.5">
+        <input
+          type="radio"
+          checked={!active}
+          onChange={() => {
+            setActive(false);
+            onChange("");
+          }}
+        />
+        Everyone with link can join!
+      </label>
+      <label className="flex items-center gap-1.5">
+        <input
+          type="radio"
+          checked={active}
+          onChange={() => {
+            setActive(true);
+          }}
+        />
+        Private meeting!
+      </label>
+      {active && (
+        <label className="block space-y-1">
+          <span className="font-medium">Participant emails</span>
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Enter participant email addresses seperated by comas"
+            className="w-full rounded-md border border-gray-300 p-2"
+          />
         </label>
       )}
     </div>
