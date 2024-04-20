@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
@@ -9,9 +9,28 @@ export default function CreateMeetingPage() {
   const [descriptionInput, setDiscriptionInput] = useState("");
   const [startTimeInput, setStartTimeInput] = useState("");
   const [participantsInput, setParticipantsInput] = useState("");
+  const [call, setCall] = useState<Call>();
   const client = useStreamVideoClient();
   const { user } = useUser();
 
+  async function createMeeting() {
+    if (!client || !user) {
+      return;
+    }
+    try {
+      const id = crypto.randomUUID();
+      const call = client.call("default", id);
+      await call.getOrCreate({
+        data: {
+          custom: { description: descriptionInput },
+        },
+      });
+      setCall(call);
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong. Please try again later.");
+    }
+  }
   if (!client || !user) {
     return <Loader2 className="mx-auto animate-spin" />;
   }
@@ -36,6 +55,7 @@ export default function CreateMeetingPage() {
           Start meeting
         </button>
       </div>
+      {call && <MeetingLink call={call} />}
     </div>
   );
 }
@@ -177,4 +197,14 @@ function ParticipantsInput({ value, onChange }: ParticipantsInputProps) {
       )}
     </div>
   );
+}
+
+interface MeetingLinkProps {
+  call: Call;
+}
+
+function MeetingLink({ call }: MeetingLinkProps) {
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${call.id}`;
+
+  return <div className="text-center">{meetingLink}</div>;
 }
