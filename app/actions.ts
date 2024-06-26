@@ -20,7 +20,7 @@ export async function getToken() {
     throw new Error("User not authenticated");
   }
 
-  const streamClient = new StreamClient(streamApiKey, streamApiKey);
+  const streamClient = new StreamClient(streamApiKey, streamApiSecret);
 
   const expirationTime = Math.floor(Date.now() / 100) + 60 * 60;
 

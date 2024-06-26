@@ -51,8 +51,11 @@ export default function CreateMeetingPage() {
           value={participantsInput}
           onChange={setParticipantsInput}
         />
-        <button className="w-full rounded-md border bg-orange-300 text-white">
-          Start meeting
+        <button
+          onClick={createMeeting}
+          className="w-full rounded-md border bg-orange-300 text-white"
+        >
+          Create meeting
         </button>
       </div>
       {call && <MeetingLink call={call} />}
