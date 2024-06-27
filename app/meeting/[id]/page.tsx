@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import MeetingPage from "./MeetingPage";
 
 interface PageProps {
   params: { id: string };
@@ -11,5 +12,5 @@ export function GenerateMetadata({ params: { id } }: PageProps): Metadata {
 }
 
 export default function Page({ params: { id } }: PageProps) {
-  return <></>;
+  return <MeetingPage id={id} />;
 }
